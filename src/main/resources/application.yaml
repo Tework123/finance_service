@@ -6,18 +6,23 @@ spring:
     name: finance_service
 
 
-#  datasource:
-#    url: ${SPRING_DATASOURCE_URL}
-#    username: ${SPRING_DATASOURCE_USERNAME}
-#    password: ${SPRING_DATASOURCE_PASSWORD}
-#    hikari:
-#      auto-commit: false
+  #  datasource:
+  #    url: ${SPRING_DATASOURCE_URL}
+  #    username: ${SPRING_DATASOURCE_USERNAME}
+  #    password: ${SPRING_DATASOURCE_PASSWORD}
+  #    hikari:
+  #      auto-commit: false
 
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
+    listener:
+      simple:
+        default-requeue-rejected: false
+        acknowledge-mode: manual
+
 
 #  jpa:
 #    hibernate:
