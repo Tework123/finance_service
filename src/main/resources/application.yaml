@@ -21,7 +21,7 @@ spring:
     listener:
       simple:
         default-requeue-rejected: false
-        acknowledge-mode: manual
+#        acknowledge-mode: manual
 
 
 #  jpa:

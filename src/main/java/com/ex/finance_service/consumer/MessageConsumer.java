@@ -1,11 +1,15 @@
 package com.ex.finance_service.consumer;
 
+import com.ex.finance_service.config.RabbitConfig;
 import com.ex.finance_service.dto.FinanceServiceDto.SendRouteEventsRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +22,7 @@ import static com.ex.finance_service.config.RabbitConfig.ROUTE_EVENTS_QUEUE;
 @RequiredArgsConstructor
 public class MessageConsumer {
     private final ObjectMapper objectMapper;
+    private final RabbitTemplate rabbitTemplate;
 
 
 //    @RabbitListener(queues = ROUTE_EVENTS_QUEUE)
@@ -32,26 +37,18 @@ public class MessageConsumer {
 //        throw new RuntimeException("Force send to DLX");
 //    }
 
+//    todo короче я вижу так: отправляется первый раз, падает,
+//     отправляется в reply, там чилит 10 сек, стухает и отправляется в dlx.
+//     Сам reply отправку повторную не делает, почему gpt решил, что должен дедлать хз
+
     @RabbitListener(queues = ROUTE_EVENTS_QUEUE)
     public void receive(Message message, Channel channel) throws IOException {
-        String json = new String(message.getBody(), StandardCharsets.UTF_8);
-        SendRouteEventsRequestDto.RouteEventDto dto = objectMapper.readValue(json, SendRouteEventsRequestDto.RouteEventDto.class);
-        System.out.println("Received message from RabbitMQ(route): " + dto);
+        System.out.println("Received: " + message);
+        // если бросаем исключение, Rabbit сам отправит в retry или dead
+//        throw new RuntimeException("Test fail");
+//        String json = new String(message.getBody(), StandardCharsets.UTF_8);
+//        SendRouteEventsRequestDto.RouteEventDto dto = objectMapper.readValue(json, SendRouteEventsRequestDto.RouteEventDto.class);
 
-        long deliveryTag = message.getMessageProperties().getDeliveryTag();
-
-        try {
-            // Здесь обработка
-            throw new RuntimeException("Force send to DLX");
-        } catch (Exception e) {
-            // Отклоняем сообщение, не перекидываем в очередь
-            channel.basicReject(deliveryTag, false);
-        }
-    }
-
-    @RabbitListener(queues = "retry.queue")
-    public void receiveRetry(String msg) {
-        System.out.println("Retry queue got: " + msg);
     }
 
 //    @RabbitListener(queues = "dlx.queue")

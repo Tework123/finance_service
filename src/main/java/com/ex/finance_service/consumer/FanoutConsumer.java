@@ -11,13 +11,13 @@ import java.io.IOException;
 @Component
 public class FanoutConsumer {
 
-    @RabbitListener(queues = "service-b.queue")
-    public void handleMessage(Message message, Channel channel) throws IOException {
-//        SendRouteEventsRequestDto responseDto = (SendRouteEventsRequestDto) message;
-        System.out.println("Received message from RabbitMQ(fanout): " + message);
-
-        long deliveryTag = message.getMessageProperties().getDeliveryTag();
-
-        channel.basicReject(deliveryTag, false);
-    }
+//    @RabbitListener(queues = "service-b.queue")
+//    public void handleMessage(Message message, Channel channel) throws IOException {
+////        SendRouteEventsRequestDto responseDto = (SendRouteEventsRequestDto) message;
+//        System.out.println("Received message from RabbitMQ(fanout): " + message);
+//
+//        long deliveryTag = message.getMessageProperties().getDeliveryTag();
+//
+//        channel.basicReject(deliveryTag, false);
+//    }
 }
