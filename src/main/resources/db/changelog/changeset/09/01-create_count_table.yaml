@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-count-table
+      author: tework
+      context: dev,prod
+      labels: initial,core
+      comments: Создание таблицы count для хранения счетчиков
+
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: count
+
+      changes:
+        - createTable:
+            tableName: count
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: count
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: route_event_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: count_status
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_dt
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+      rollback:
+        - dropTable:
+            tableName: count
