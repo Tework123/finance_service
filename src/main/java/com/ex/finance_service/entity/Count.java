@@ -26,6 +26,7 @@ public class Count {
     @Column(name = "route_event_id")
     private UUID routeEventId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "count_status")
     private CountStatus countStatus;
 

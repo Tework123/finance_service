@@ -12,6 +12,8 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     hikari:
       auto-commit: false
+  liquibase:
+    enabled: true
 
   #  kafka:
   #    bootstrap-servers: localhost:9092

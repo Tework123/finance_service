@@ -2,13 +2,11 @@ databaseChangeLog:
   - changeSet:
       id: create-count-table
       author: tework
-      context: dev,prod
-      labels: initial,core
-      comments: Создание таблицы count для хранения счетчиков
 
       preConditions:
-        - onFail: MARK_RAN
-        - tableExists:
+        onFail: CONTINUE
+        not:
+          tableExists:
             tableName: count
 
       changes:

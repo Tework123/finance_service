@@ -21,15 +21,15 @@ public class KafkaConsumer {
 
     }
 
-    @KafkaListener(topics = "request-topic", groupId = "my-json-group")
-    @SendTo  // <- Spring использует reply-topic из заголовка
-    public String listenSync(String message){
-        try {
-            SendRouteEventsRequestDto.RouteEventDto dto = objectMapper.readValue(message, SendRouteEventsRequestDto.RouteEventDto.class);
-            System.out.println("Kafka consumer received message: " + dto.getRouteEventId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "yes, i am accept you message";
-    }
+//    @KafkaListener(topics = "request-topic", groupId = "my-json-group")
+//    @SendTo  // <- Spring использует reply-topic из заголовка
+//    public String listenSync(String message){
+//        try {
+//            SendRouteEventsRequestDto.RouteEventDto dto = objectMapper.readValue(message, SendRouteEventsRequestDto.RouteEventDto.class);
+//            System.out.println("Kafka consumer received message: " + dto.getRouteEventId());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return "yes, i am accept you message";
+//    }
 }

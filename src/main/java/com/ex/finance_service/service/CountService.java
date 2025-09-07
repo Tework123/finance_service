@@ -17,9 +17,12 @@ import java.util.UUID;
 public class CountService {
     private final CountRepository countRepository;
 
+//    а вот допустим я создал запись и статус new,
+//    а далее с этим статусом началась работа, а потом другой консумер упал ...надо его откатить...
     public void save(SendRouteEventsRequestDto.RouteEventDto dto) {
         Count newCount = Count.builder()
                 .count(1)
+                .routeEventId(dto.getRouteEventId())
                 .countStatus(CountStatus.NEW)
                 .build();
 

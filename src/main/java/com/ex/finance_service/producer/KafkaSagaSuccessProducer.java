@@ -1,6 +1,5 @@
 package com.ex.finance_service.producer;
 
-import com.ex.finance_service.dto.FinanceServiceDto.SendRouteEventsRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,20 +9,20 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class KafkaSagaProducer {
+public class KafkaSagaSuccessProducer {
 
     private final KafkaTemplate<String, String> kafkaSagaSuccessTemplate;
     private final ObjectMapper objectMapper;
 
-    public KafkaSagaProducer(@Qualifier("kafkaSagaSuccessTemplate") KafkaTemplate<String, String> kafkaSagaMainTemplate, ObjectMapper objectMapper) {
-        this.kafkaSagaSuccessTemplate = kafkaSagaMainTemplate;
+    public KafkaSagaSuccessProducer(@Qualifier("kafkaSagaSuccessTemplate") KafkaTemplate<String, String> kafkaSagaSuccessTemplate, ObjectMapper objectMapper) {
+        this.kafkaSagaSuccessTemplate = kafkaSagaSuccessTemplate;
         this.objectMapper = objectMapper;
     }
 
-    public void sendMessage(String topic, UUID routeEventId) throws JsonProcessingException, InterruptedException {
+    public void sendMessageToSuccessTopic(UUID routeEventId) throws JsonProcessingException, InterruptedException {
         String json = objectMapper.writeValueAsString(routeEventId);
 
-        kafkaSagaSuccessTemplate.send(topic, json);
+        kafkaSagaSuccessTemplate.send("saga-success-topic", json);
 
         System.out.println("Finance_service producer отправил подтверждение" +
                 " успешной транзакции в saga-success-topic: " + routeEventId);
