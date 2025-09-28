@@ -19,12 +19,12 @@ public class KafkaSagaCancelProducer {
         this.objectMapper = objectMapper;
     }
 
-    public void sendMessageToCancelTopic(UUID routeEventId) throws JsonProcessingException, InterruptedException {
-        String json = objectMapper.writeValueAsString(routeEventId);
+    public void sendMessageToCancelTopic(UUID id) throws JsonProcessingException, InterruptedException {
+        String json = objectMapper.writeValueAsString(id);
 
         kafkaSagaCancelTemplate.send("saga-cancel-topic", json);
 
         System.out.println("Finance_service producer отправил подтверждение" +
-                " ошибочной транзакции в saga-cancel-topic: " + routeEventId);
+                " ошибочной транзакции в saga-cancel-topic: " + id);
     }
 }

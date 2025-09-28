@@ -11,7 +11,4 @@ import java.util.UUID;
 @Repository
 public interface CountRepository extends JpaRepository<Count, UUID> {
 
-    @Query(value = "select c from Count c where c.routeEventId = :routeEventId order by c.createDt limit 1")
-    Count findByRouteEventId(UUID routeEventId);
-
 }

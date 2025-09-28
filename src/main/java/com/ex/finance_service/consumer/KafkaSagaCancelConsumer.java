@@ -22,10 +22,10 @@ public class KafkaSagaCancelConsumer {
             groupId = "finance_service_cancel_consumer",
             containerFactory = "kafkaSagaCancelListenerContainerFactory")
     public void listenSagaCancelTopic(String message) throws JsonProcessingException, InterruptedException {
-        UUID routeEventId = objectMapper.readValue(message, UUID.class);
+        UUID id = objectMapper.readValue(message, UUID.class);
 
-        System.out.println("financeService consumer принял сообщение из saga-cancel-topic: " + routeEventId);
+        System.out.println("financeService consumer принял сообщение из saga-cancel-topic: " + id);
 
-        countService.cancel(routeEventId);
+        countService.cancel(id);
     }
 }

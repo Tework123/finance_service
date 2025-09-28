@@ -1,5 +1,6 @@
 package com.ex.finance_service.consumer;
 
+import com.ex.finance_service.dto.FinanceServiceDto.CountDto;
 import com.ex.finance_service.dto.FinanceServiceDto.SendRouteEventsRequestDto;
 import com.ex.finance_service.producer.KafkaSagaCancelProducer;
 import com.ex.finance_service.producer.KafkaSagaSuccessProducer;
@@ -23,13 +24,13 @@ public class KafkaSagaMainConsumer {
     private final KafkaSagaCancelProducer kafkaSagaCancelProducer;
     private final CountService countService;
 
-//    @Transactional
+    //    @Transactional
     @KafkaListener(topics = "saga-main-topic",
             groupId = "finance_service_main_consumer",
             containerFactory = "kafkaSagaMainListenerContainerFactory")
     public void listenSagaMainTopic(String message) throws JsonProcessingException, InterruptedException {
 //        а если падает сериализация?
-        SendRouteEventsRequestDto.RouteEventDto dto = objectMapper.readValue(message, SendRouteEventsRequestDto.RouteEventDto.class);
+        CountDto dto = objectMapper.readValue(message, CountDto.class);
         try {
             System.out.println("financeService consumer принял сообщение из saga-main-topic: " + dto.getRouteEventId());
 
@@ -41,8 +42,9 @@ public class KafkaSagaMainConsumer {
             System.err.println("Ошибка обработки: " + e.getMessage());
             try {
 //               todo  в базе здесь также new лежит, нихуя не понимаю что происходит.
-                countService.cancel(dto.getRouteEventId());
-                kafkaSagaCancelProducer.sendMessageToCancelTopic(dto.getRouteEventId());
+//                хотя зачем здесь отменять, если оно и не записалось.
+//                countService.cancel(dto.getRouteEventId());
+                kafkaSagaCancelProducer.sendMessageToCancelTopic(dto.getId());
             } catch (Exception fatal) {
                 // здесь можно писать в базу или файл, как "последний шанс"
                 log.error("Не удалось отправить даже в cancel-topic.", fatal);
